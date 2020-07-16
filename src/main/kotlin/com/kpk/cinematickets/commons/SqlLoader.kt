@@ -11,6 +11,7 @@ class SqlLoader(@Value("\${sql.container}") sqlFilesPath: String) {
     private val logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().canonicalName)
 
     companion object Queries {
+        lateinit var GET_ALL_MOVIES: String
     }
 
     init {
