@@ -13,6 +13,7 @@ class SqlLoader(@Value("\${sql.container}") sqlFilesPath: String) {
     companion object Queries {
         lateinit var GET_ALL_MOVIES: String
         lateinit var GET_MOVIE_SCREENINGS: String
+        lateinit var GET_SCREENING_SEATS: String
     }
 
     init {
