@@ -9,4 +9,8 @@ data class Movie (
         val description: String,
         val rating: BigDecimal,
         val actors: String
-)
+) {
+    fun getDetailsString(): String {
+        return "Title: $title, length: $length_minutes, resume: $description"
+    }
+}

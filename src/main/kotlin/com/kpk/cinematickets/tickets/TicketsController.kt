@@ -1,6 +1,7 @@
 package com.kpk.cinematickets.tickets
 
 import com.kpk.cinematickets.commons.BUSINESS_ERROR_CODE
+import com.kpk.cinematickets.commons.clientEmail
 import com.kpk.cinematickets.tickets.models.GroupTicketPurchaseRequest
 import com.kpk.cinematickets.tickets.models.TicketPurchaseException
 import org.slf4j.LoggerFactory
@@ -21,8 +22,8 @@ class TicketsController(val ticketsService: TicketsService) {
     @PostMapping("/buy")
     fun buyTickets(@RequestBody request: GroupTicketPurchaseRequest, authentication: OAuth2AuthenticationToken): ResponseEntity<Any> {
         return try {
-            val purchasedTicket = ticketsService.processGroupTicketPurchase(request.screeningId, request.seatIds, authentication.name)
-            //TODO send ticketInfo to buyer
+            val purchasedTicket = ticketsService.processGroupTicketPurchase(request.screeningId, request.seats, authentication.name)
+            ticketsService.sendTicket(purchasedTicket, authentication.clientEmail())
             ResponseEntity.ok().body(purchasedTicket)
         } catch (ex: TicketPurchaseException) {
             logger.error("Buy tickets error:", ex)
