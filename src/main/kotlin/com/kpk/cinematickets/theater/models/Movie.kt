@@ -1,16 +1,16 @@
-package com.kpk.cinematickets.movies.models
+package com.kpk.cinematickets.theater.models
 
 import java.math.BigDecimal
 
 data class Movie (
         val id: Long,
         val title: String,
-        val length_minutes: Long,
+        val lengthMinutes: Long,
         val description: String,
         val rating: BigDecimal,
         val actors: String
 ) {
-    fun getDetailsString(): String {
-        return "Title: $title, length: $length_minutes, resume: $description"
+    override fun toString(): String {
+        return "Title: $title, length: $lengthMinutes, resume: $description"
     }
 }

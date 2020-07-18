@@ -1,10 +1,9 @@
-package com.kpk.cinematickets.movies
+package com.kpk.cinematickets.theater
 
 import com.kpk.cinematickets.commons.SqlLoader
-import com.kpk.cinematickets.movies.models.Movie
-import com.kpk.cinematickets.movies.models.Screening
-import com.kpk.cinematickets.movies.models.Seat
-import com.kpk.cinematickets.tickets.models.InvalidScreeningException
+import com.kpk.cinematickets.theater.models.Movie
+import com.kpk.cinematickets.theater.models.Screening
+import com.kpk.cinematickets.theater.models.Seat
 import com.kpk.cinematickets.tickets.models.ScreeningWithMovie
 import org.slf4j.LoggerFactory
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
@@ -14,7 +13,7 @@ import java.lang.invoke.MethodHandles
 import java.sql.ResultSet
 
 @Repository
-class MoviesRepository(val jdbcTemplate: NamedParameterJdbcTemplate) {
+class TheaterRepository(val jdbcTemplate: NamedParameterJdbcTemplate) {
 
     private val logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().canonicalName)
 

@@ -1,7 +1,7 @@
 package com.kpk.cinematickets.tickets
 
-import com.kpk.cinematickets.movies.MoviesRepository
-import com.kpk.cinematickets.movies.models.Seat
+import com.kpk.cinematickets.theater.TheaterRepository
+import com.kpk.cinematickets.theater.models.Seat
 import com.kpk.cinematickets.notifications.NotificationService
 import com.kpk.cinematickets.tickets.models.*
 import com.kpk.cinematickets.wallet.InsufficientClientMoney
@@ -15,33 +15,33 @@ import java.time.LocalDateTime
 import java.util.*
 
 interface TicketsService {
-    fun processGroupTicketPurchase(screeningId: Long, seatIds: List<Long>, buyerName: String): PurchasedGroupTicket
+    fun processGroupTicketPurchase(screeningId: Long, seatIdsToPurchase: List<Long>, buyerName: String): PurchasedGroupTicket
     fun sendTicketAsync(ticketInfo: PurchasedGroupTicket, receiverEmail: String)
 }
 
 @Service
 class TicketsServiceImpl(
         val ticketsRepository: TicketsRepository,
-        val moviesRepository: MoviesRepository,
+        val theaterRepository: TheaterRepository,
         val notificationService: NotificationService,
         val walletService: WalletService
 ): TicketsService {
 
     @Throws(InvalidTicketException::class, InsufficientClientMoney::class)
     @Transactional
-    override fun processGroupTicketPurchase(screeningId: Long, seatIds: List<Long>, buyerName: String): PurchasedGroupTicket {
-        val screeningWithMovie = moviesRepository.getScreeningWithMovie(screeningId)
-        if (screeningWithMovie == null || screeningWithMovie.screening.time < LocalDateTime.now()) {
-            throw InvalidScreeningException("Screening time passed!")
+    override fun processGroupTicketPurchase(screeningId: Long, seatIdsToPurchase: List<Long>, buyerName: String): PurchasedGroupTicket {
+        val movieScreening = theaterRepository.getScreeningWithMovie(screeningId)
+        if (movieScreening == null || movieScreening.screening.time < LocalDateTime.now()) {
+            throw InvalidScreeningException("Invalid screening!")
         }
 
-        val ticketSeats = moviesRepository.getScreeningSeats(screeningId).filter { seatIds.contains(it.id) }
-        if (ticketSeats.size != seatIds.size || ticketSeats.any{ !it.isFree }) {
+        val ticketSeats = theaterRepository.getScreeningSeats(screeningId).filter { seatIdsToPurchase.contains(it.id) }
+        if (ticketSeats.size != seatIdsToPurchase.size || ticketSeats.any{ !it.isFree }) {
             throw InvalidSeatsException("Invalid seat ids!")
         }
 
-        processClientPayment(buyerName, screeningWithMovie.screening.price, ticketSeats.size)
-        return PurchasedGroupTicket(screeningWithMovie, saveTickets(screeningId, ticketSeats, buyerName))
+        processClientPayment(buyerName, movieScreening.screening.price, ticketSeats.size)
+        return PurchasedGroupTicket(movieScreening, saveTickets(screeningId, ticketSeats, buyerName))
     }
 
     private fun saveTickets(screeningId: Long, seats: List<Seat>, buyerName: String): List<PurchasedSeat> {
@@ -65,7 +65,7 @@ class TicketsServiceImpl(
             notificationService.sendNotification(
                     receiverEmail,
                     "Ticket for ${ticketInfo.screeningWithMovie.movie.title}",
-                    ticketInfo.getDetailsString()
+                    ticketInfo.toString()
             )
         }
     }

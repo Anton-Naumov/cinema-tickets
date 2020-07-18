@@ -6,9 +6,9 @@ data class PurchasedGroupTicket(
         val screeningWithMovie: ScreeningWithMovie,
         val purchasedSeats: List<PurchasedSeat>
 ) {
-    fun getDetailsString(): String {
+    override fun toString(): String {
         val ticketsData = StringBuilder()
-        ticketsData.append(screeningWithMovie.movie.getDetailsString())
+        ticketsData.append(screeningWithMovie.movie)
         purchasedSeats.forEach {
             ticketsData.append("Seat: ${it.seatNumber}, ticket number: ${it.uniqueTicketId}")
         }

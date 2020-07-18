@@ -1,8 +1,8 @@
-package com.kpk.cinematickets.movies
+package com.kpk.cinematickets.theater
 
-import com.kpk.cinematickets.movies.models.Movie
-import com.kpk.cinematickets.movies.models.Screening
-import com.kpk.cinematickets.movies.models.Seat
+import com.kpk.cinematickets.theater.models.Movie
+import com.kpk.cinematickets.theater.models.Screening
+import com.kpk.cinematickets.theater.models.Seat
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
@@ -10,21 +10,21 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/movies")
-class MoviesController(val moviesRepository: MoviesRepository) {
+class TheaterController(val theaterRepository: TheaterRepository) {
 
     @GetMapping("/all")
     fun getMovies(): List<Movie> {
-        return moviesRepository.getMovies()
+        return theaterRepository.getMovies()
     }
 
     @GetMapping("/{movieId}/screenings")
     fun getMoviesScreenings(@PathVariable("movieId") movieId: Long): List<Screening> {
-        return moviesRepository.getMovieScreenings(movieId)
+        return theaterRepository.getMovieScreenings(movieId)
     }
 
     @GetMapping("/screening/{screeningId}/seats")
     fun getScreeningRoomSeats(@PathVariable("screeningId") screeningId: Long): List<Seat> {
-        return moviesRepository.getScreeningSeats(screeningId)
+        return theaterRepository.getScreeningSeats(screeningId)
     }
 
 }

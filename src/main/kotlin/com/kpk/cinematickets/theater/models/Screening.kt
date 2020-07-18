@@ -1,4 +1,4 @@
-package com.kpk.cinematickets.movies.models
+package com.kpk.cinematickets.theater.models
 
 import java.math.BigDecimal
 import java.time.LocalDateTime
