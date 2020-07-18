@@ -1,3 +1,5 @@
 package com.kpk.cinematickets.wallet
 
-class InsufficientClientMoney(message: String): RuntimeException(message)
+import com.kpk.cinematickets.commons.BusinessException
+
+class InsufficientClientMoney(message: String): BusinessException(message)
