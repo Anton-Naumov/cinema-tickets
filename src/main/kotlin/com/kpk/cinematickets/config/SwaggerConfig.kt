@@ -2,6 +2,7 @@ package com.kpk.cinematickets.config
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken
 import springfox.documentation.builders.PathSelectors
 import springfox.documentation.builders.RequestHandlerSelectors
 import springfox.documentation.spi.DocumentationType
@@ -15,6 +16,7 @@ class SwaggerConfig {
     @Bean
     fun api(): Docket {
         return Docket(DocumentationType.SWAGGER_2)
+                .ignoredParameterTypes(OAuth2AuthenticationToken::class.java)
                 .select()
                 .apis(RequestHandlerSelectors.any())
                 .paths(PathSelectors.any())

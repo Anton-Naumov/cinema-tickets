@@ -15,7 +15,10 @@ class SecurityConfig(
 
     @Throws(Exception::class)
     override fun configure(http: HttpSecurity) {
-        http.authorizeRequests().anyRequest().authenticated()
+        http.csrf().disable()
+                .authorizeRequests()
+                .anyRequest()
+                .authenticated()
                 .and()
                 .oauth2Login()
                 .clientRegistrationRepository(clientRegistrationRepository)
