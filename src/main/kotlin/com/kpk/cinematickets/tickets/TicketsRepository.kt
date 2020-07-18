@@ -1,6 +1,7 @@
 package com.kpk.cinematickets.tickets
 
 import com.kpk.cinematickets.commons.SqlLoader
+import com.kpk.cinematickets.tickets.models.Ticket
 import org.slf4j.LoggerFactory
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -23,6 +24,23 @@ class TicketsRepository(val jdbcTemplate: NamedParameterJdbcTemplate) {
         params.addValue("buyerName", buyerName)
 
         jdbcTemplate.update(SqlLoader.INSERT_TICKET, params)
+    }
+
+    fun getTickets(clientName: String): List<Ticket> {
+        logger.info("Getting tickets for client name: {}", clientName)
+
+        val params = MapSqlParameterSource()
+        params.addValue("clientName", clientName)
+
+        return jdbcTemplate.query(SqlLoader.GET_TICKET_INFO, params) { rs, _ ->
+            Ticket(
+                    rs.getString("unique_id"),
+                    rs.getString("movie_title"),
+                    rs.getTimestamp("screening_time").toLocalDateTime(),
+                    rs.getLong("screening_room"),
+                    rs.getLong("seat_number")
+            )
+        }
     }
 
 }
