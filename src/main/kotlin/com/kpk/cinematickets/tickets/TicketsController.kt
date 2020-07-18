@@ -22,7 +22,7 @@ class TicketsController(val ticketsService: TicketsService) {
     @PostMapping("/buy")
     fun buyTickets(@RequestBody request: GroupTicketPurchaseRequest, authentication: OAuth2AuthenticationToken): ResponseEntity<Any> {
         return try {
-            val purchasedTicket = ticketsService.processGroupTicketPurchase(request.screeningId, request.seats, authentication.name)
+            val purchasedTicket = ticketsService.processGroupTicketPurchase(request.screeningId, request.seatIds, authentication.name)
             ticketsService.sendTicket(purchasedTicket, authentication.clientEmail())
             ResponseEntity.ok().body(purchasedTicket)
         } catch (ex: TicketPurchaseException) {
