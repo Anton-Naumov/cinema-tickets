@@ -34,7 +34,8 @@ class MoviesRepository(val jdbcTemplate: NamedParameterJdbcTemplate) {
             Screening(
                     rs.getLong("screening_id"),
                     rs.getTimestamp("screening_time").toLocalDateTime(),
-                    rs.getLong("room_number")
+                    rs.getLong("room_number"),
+                    rs.getBigDecimal("price")
             )
         }
     }

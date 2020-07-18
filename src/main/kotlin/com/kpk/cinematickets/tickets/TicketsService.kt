@@ -4,8 +4,11 @@ import com.kpk.cinematickets.movies.MoviesRepository
 import com.kpk.cinematickets.movies.models.Seat
 import com.kpk.cinematickets.notifications.NotificationService
 import com.kpk.cinematickets.tickets.models.*
+import com.kpk.cinematickets.wallet.InsufficientClientMoney
+import com.kpk.cinematickets.wallet.WalletService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.math.BigDecimal
 import java.time.LocalDateTime
 import java.util.*
 
@@ -18,10 +21,11 @@ interface TicketsService {
 class TicketsServiceImpl(
         val ticketsRepository: TicketsRepository,
         val moviesRepository: MoviesRepository,
-        val notificationService: NotificationService
+        val notificationService: NotificationService,
+        val walletService: WalletService
 ): TicketsService {
 
-    @Throws(TicketPurchaseException::class)
+    @Throws(InvalidTicketException::class, InsufficientClientMoney::class)
     @Transactional
     override fun processGroupTicketPurchase(screeningId: Long, seatIds: List<Long>, buyerName: String): PurchasedGroupTicket {
         val screeningWithMovie = moviesRepository.getScreeningWithMovie(screeningId)
@@ -34,6 +38,7 @@ class TicketsServiceImpl(
             throw InvalidSeatsException("Invalid seat ids!")
         }
 
+        processClientPayment(buyerName, screeningWithMovie.screening.price, ticketSeats.size)
         return PurchasedGroupTicket(screeningWithMovie, saveTickets(screeningId, ticketSeats, buyerName))
     }
 
@@ -47,6 +52,10 @@ class TicketsServiceImpl(
 
     private fun generateNewTicketUniqueId(): String {
         return UUID.randomUUID().toString()
+    }
+
+    private fun processClientPayment(clientName: String, screeningPrice: BigDecimal, ticketsCount: Int) {
+        walletService.makePayment(clientName, screeningPrice.multiply(BigDecimal(ticketsCount)))
     }
 
     override fun sendTicket(ticketInfo: PurchasedGroupTicket, receiverEmail: String) {

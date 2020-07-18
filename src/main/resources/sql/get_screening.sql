@@ -5,7 +5,8 @@ SELECT m.id movie_id,
        m.rating,
        m.actors,
        s.id screening_id,
-       s.time screening_time
+       s.time screening_time,
+       s.price
 from screenings s
      join movies m on s.movie_id = m.id
 where s.id = :screeningId
