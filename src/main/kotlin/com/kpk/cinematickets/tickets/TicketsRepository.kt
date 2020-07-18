@@ -14,20 +14,20 @@ class TicketsRepository(val jdbcTemplate: NamedParameterJdbcTemplate) {
     private val logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().canonicalName)
 
     @Throws(SeatTakenException::class)
-    fun insertTicket(screeningId: Long, seatNumber: Long, uniqueTicketId: String, buyerEmail: String) {
-        logger.info("Inserting ticket for screening : {}, seat number: {}, uniqueTicketId: {}, buyerEmail: {}",
-                screeningId, seatNumber, uniqueTicketId, buyerEmail)
+    fun insertTicket(screeningId: Long, seatId: Long, uniqueTicketId: String, buyerName: String) {
+        logger.info("Inserting ticket for screening : {}, seat id: {}, uniqueTicketId: {}, buyerName: {}",
+                screeningId, seatId, uniqueTicketId, buyerName)
 
         val params = MapSqlParameterSource()
         params.addValue("screeningId", screeningId)
-        params.addValue("seatNumber", seatNumber)
+        params.addValue("seatId", seatId)
         params.addValue("uniqueTicketId", uniqueTicketId)
-        params.addValue("buyerEmail", buyerEmail)
+        params.addValue("buyerName", buyerName)
 
         try {
             jdbcTemplate.update(SqlLoader.INSERT_TICKET, params)
         } catch (ex: Exception) {// TODO check if seat_taken constraint
-            throw SeatTakenException("Seat $seatNumber is already taken")
+            throw SeatTakenException("Seat $seatId is already taken")
         }
     }
 

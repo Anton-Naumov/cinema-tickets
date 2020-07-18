@@ -1,6 +1,6 @@
 package com.kpk.cinematickets.tickets.models
 
-data class GroupTicket(
+data class GroupTicketPurchaseRequest(
         val screeningId: Long,
-        val seatNumbers: List<Long>
+        val seatIds: List<Long>
 )
