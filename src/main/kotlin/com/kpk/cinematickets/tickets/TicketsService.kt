@@ -30,7 +30,7 @@ class TicketsServiceImpl(
     @Throws(InvalidTicketException::class, InsufficientClientMoney::class)
     @Transactional
     override fun processGroupTicketPurchase(screeningId: Long, seatIdsToPurchase: List<Long>, buyerName: String): PurchasedGroupTicket {
-        val movieScreening = theaterRepository.getScreeningWithMovie(screeningId)
+        val movieScreening = theaterRepository.getMovieScreening(screeningId)
         if (movieScreening == null || movieScreening.screening.time < LocalDateTime.now()) {
             throw InvalidScreeningException("Invalid screening!")
         }
@@ -64,7 +64,7 @@ class TicketsServiceImpl(
         GlobalScope.launch {
             notificationService.sendNotification(
                     receiverEmail,
-                    "Ticket for ${ticketInfo.screeningWithMovie.movie.title}",
+                    "Ticket for ${ticketInfo.movieScreening.movie.title}",
                     ticketInfo.toString()
             )
         }

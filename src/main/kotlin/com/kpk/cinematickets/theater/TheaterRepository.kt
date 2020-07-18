@@ -4,7 +4,7 @@ import com.kpk.cinematickets.commons.SqlLoader
 import com.kpk.cinematickets.theater.models.Movie
 import com.kpk.cinematickets.theater.models.Screening
 import com.kpk.cinematickets.theater.models.Seat
-import com.kpk.cinematickets.tickets.models.ScreeningWithMovie
+import com.kpk.cinematickets.tickets.models.MovieScreening
 import org.slf4j.LoggerFactory
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -69,14 +69,14 @@ class TheaterRepository(val jdbcTemplate: NamedParameterJdbcTemplate) {
         }
     }
 
-    fun getScreeningWithMovie(screeningId: Long): ScreeningWithMovie? {
+    fun getMovieScreening(screeningId: Long): MovieScreening? {
         logger.info("Getting screening with id: {}", screeningId)
 
         val params = MapSqlParameterSource()
         params.addValue("screeningId", screeningId)
 
         return jdbcTemplate.query(SqlLoader.GET_SCREENING, params) { rs, rowNum ->
-            ScreeningWithMovie(
+            MovieScreening(
                     movieRowMapper(rs, rowNum),
                     movieScreeningRowMapper(rs, rowNum)
             )
