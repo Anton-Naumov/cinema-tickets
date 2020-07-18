@@ -8,5 +8,5 @@ CREATE TABLE screenings (
        movie_id BIGINT REFERENCES movies(id),
        room_id BIGINT REFERENCES rooms(id),
        time TIMESTAMP,
-       price DECIMAL
+       price DECIMAL(10, 2)
 );

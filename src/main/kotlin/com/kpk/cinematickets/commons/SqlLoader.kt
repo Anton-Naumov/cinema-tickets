@@ -23,6 +23,7 @@ class SqlLoader(@Value("\${sql.container}") sqlFilesPath: String) {
         lateinit var INSERT_ROOM: String
         lateinit var INSERT_SEAT: String
         lateinit var INSERT_SCREENING: String
+        lateinit var INSERT_DUMMY_USER: String
         lateinit var GET_TICKET_INFO: String
     }
 
