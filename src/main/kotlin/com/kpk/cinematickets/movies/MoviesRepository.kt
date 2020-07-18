@@ -64,7 +64,7 @@ class MoviesRepository(val jdbcTemplate: NamedParameterJdbcTemplate) {
         }
     }
 
-    fun getScreeningWithMovie(screeningId: Long): ScreeningWithMovie {
+    fun getScreeningWithMovie(screeningId: Long): ScreeningWithMovie? {
         logger.info("Getting screening with id: {}", screeningId)
 
         val params = MapSqlParameterSource()
@@ -75,6 +75,6 @@ class MoviesRepository(val jdbcTemplate: NamedParameterJdbcTemplate) {
                     movieRowMapper(rs, rowNum),
                     movieScreeningRowMapper(rs, rowNum)
             )
-        }.firstOrNull() ?: throw InvalidScreeningException("Screening with id $screeningId doesn't exist!")
+        }.firstOrNull()
     }
 }

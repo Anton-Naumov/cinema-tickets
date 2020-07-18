@@ -26,14 +26,18 @@ class TicketsServiceImpl(
     @Transactional
     override fun processGroupTicketPurchase(screeningId: Long, seats: List<Seat>, buyerName: String): PurchasedGroupTicket {
         val screeningWithMovie = moviesRepository.getScreeningWithMovie(screeningId)
-        if (screeningWithMovie.screening.time < LocalDateTime.now()) {
-            throw InvalidScreeningException("Screening time passed!")
+        if (screeningWithMovie == null || screeningWithMovie.screening.time < LocalDateTime.now()) {
+            throw InvalidScreeningException("Screening is invalid!")
         }
+        return PurchasedGroupTicket(screeningWithMovie, saveTickets(screeningId, seats, buyerName))
+    }
+
+    private fun saveTickets(screeningId: Long, seats: List<Seat>, buyerName: String): List<PurchasedSeat> {
         return seats.map { seat ->
             val uniqueTicketId = generateNewTicketUniqueId()
             ticketsRepository.insertTicket(screeningId, seat.id, uniqueTicketId, buyerName)
             PurchasedSeat(uniqueTicketId, seat.number)
-        }.let { PurchasedGroupTicket(screeningWithMovie, it) }
+        }
     }
 
     private fun generateNewTicketUniqueId(): String {
