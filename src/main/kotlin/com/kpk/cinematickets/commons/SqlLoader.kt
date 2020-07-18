@@ -19,6 +19,10 @@ class SqlLoader(@Value("\${sql.container}") sqlFilesPath: String) {
         lateinit var GET_CLIENT_MONEY_FOR_UPDATE: String
         lateinit var GET_CLIENT_MONEY: String
         lateinit var UPDATE_CLIENT_MONEY: String
+        lateinit var INSERT_MOVIE: String
+        lateinit var INSERT_ROOM: String
+        lateinit var INSERT_SEAT: String
+        lateinit var INSERT_SCREENING: String
     }
 
     init {

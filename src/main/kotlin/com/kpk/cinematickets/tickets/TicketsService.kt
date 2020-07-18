@@ -47,7 +47,7 @@ class TicketsServiceImpl(
     private fun saveTickets(screeningId: Long, seats: List<Seat>, buyerName: String): List<PurchasedSeat> {
         return seats.map { seat ->
             val uniqueTicketId = generateNewTicketUniqueId()
-            ticketsRepository.insertTicket(screeningId, seat.id, uniqueTicketId, buyerName)
+            ticketsRepository.insertTicket(screeningId, seat.id!!, uniqueTicketId, buyerName)
             PurchasedSeat(uniqueTicketId, seat.number)
         }
     }

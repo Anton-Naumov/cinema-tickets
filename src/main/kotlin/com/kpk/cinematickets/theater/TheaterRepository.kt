@@ -8,9 +8,14 @@ import com.kpk.cinematickets.tickets.models.ScreeningWithMovie
 import org.slf4j.LoggerFactory
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import org.springframework.jdbc.support.GeneratedKeyHolder
+import org.springframework.jdbc.support.KeyHolder
 import org.springframework.stereotype.Repository
 import java.lang.invoke.MethodHandles
+import java.math.BigDecimal
 import java.sql.ResultSet
+import java.time.LocalDateTime
+
 
 @Repository
 class TheaterRepository(val jdbcTemplate: NamedParameterJdbcTemplate) {
@@ -77,4 +82,57 @@ class TheaterRepository(val jdbcTemplate: NamedParameterJdbcTemplate) {
             )
         }.firstOrNull()
     }
+
+    fun insertMovie(movie: Movie): Long {
+        logger.info("Inserting movie: {}", movie)
+
+        val params = MapSqlParameterSource()
+        params.addValue("title", movie.title)
+        params.addValue("lengthMinutes", movie.lengthMinutes)
+        params.addValue("description", movie.description)
+        params.addValue("rating", movie.rating)
+        params.addValue("actors", movie.actors)
+
+        val holder: KeyHolder = GeneratedKeyHolder()
+        jdbcTemplate.update(SqlLoader.INSERT_MOVIE, params, holder, arrayOf("id"))
+        return holder.key!!.toLong()
+    }
+
+    fun insertRoom(roomNumber: Long): Long {
+        logger.info("Inserting room with number: {}", roomNumber)
+
+        val params = MapSqlParameterSource()
+        params.addValue("roomNumber", roomNumber)
+
+        val holder: KeyHolder = GeneratedKeyHolder()
+        jdbcTemplate.update(SqlLoader.INSERT_ROOM, params, holder, arrayOf("id"))
+        return holder.key!!.toLong()
+    }
+
+    fun insertSeats(roomId: Long, seatNumber: Long): Long {
+        logger.info("Inserting seat from room id: {} with number: {}", roomId, seatNumber)
+
+        val params = MapSqlParameterSource()
+        params.addValue("roomId", roomId)
+        params.addValue("seatNumber", seatNumber)
+
+        val holder: KeyHolder = GeneratedKeyHolder()
+        jdbcTemplate.update(SqlLoader.INSERT_SEAT, params, holder, arrayOf("id"))
+        return holder.key!!.toLong()
+    }
+
+    fun insertScreening(movieId: Long, roomId: Long, time: LocalDateTime, price: BigDecimal): Long {
+        logger.info("Inserting movieId: {}, roomId: {}, time: {}, price: {}", movieId, roomId, time, price)
+
+        val params = MapSqlParameterSource()
+        params.addValue("movieId", movieId)
+        params.addValue("roomId", roomId)
+        params.addValue("time", time)
+        params.addValue("price", price)
+
+        val holder: KeyHolder = GeneratedKeyHolder()
+        jdbcTemplate.update(SqlLoader.INSERT_SCREENING, params, holder, arrayOf("id"))
+        return holder.key!!.toLong()
+    }
+
 }

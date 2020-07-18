@@ -3,7 +3,7 @@ package com.kpk.cinematickets.theater.models
 import java.math.BigDecimal
 
 data class Movie (
-        val id: Long,
+        val id: Long? = null,
         val title: String,
         val lengthMinutes: Long,
         val description: String,
