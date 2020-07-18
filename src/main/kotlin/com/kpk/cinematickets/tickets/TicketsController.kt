@@ -20,7 +20,7 @@ class TicketsController(val ticketsService: TicketsService) {
     @PostMapping("/buy")
     fun buyTickets(@RequestBody request: GroupTicketPurchaseRequest, authentication: OAuth2AuthenticationToken): PurchasedGroupTicket {
         val purchasedTicket = ticketsService.processGroupTicketPurchase(request.screeningId, request.seatIds, authentication.name)
-        ticketsService.sendTicket(purchasedTicket, authentication.clientEmail())
+        ticketsService.sendTicketAsync(purchasedTicket, authentication.clientEmail())
         return purchasedTicket
     }
 

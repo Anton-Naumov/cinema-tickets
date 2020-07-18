@@ -6,6 +6,8 @@ import com.kpk.cinematickets.notifications.NotificationService
 import com.kpk.cinematickets.tickets.models.*
 import com.kpk.cinematickets.wallet.InsufficientClientMoney
 import com.kpk.cinematickets.wallet.WalletService
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.math.BigDecimal
@@ -14,7 +16,7 @@ import java.util.*
 
 interface TicketsService {
     fun processGroupTicketPurchase(screeningId: Long, seatIds: List<Long>, buyerName: String): PurchasedGroupTicket
-    fun sendTicket(ticketInfo: PurchasedGroupTicket, receiverEmail: String)
+    fun sendTicketAsync(ticketInfo: PurchasedGroupTicket, receiverEmail: String)
 }
 
 @Service
@@ -58,12 +60,14 @@ class TicketsServiceImpl(
         walletService.makePayment(clientName, screeningPrice.multiply(BigDecimal(ticketsCount)))
     }
 
-    override fun sendTicket(ticketInfo: PurchasedGroupTicket, receiverEmail: String) {
-        notificationService.sendNotification(
-                receiverEmail,
-                "Ticket for ${ticketInfo.screeningWithMovie.movie.title}",
-                ticketInfo.getDetailsString()
-        )
+    override fun sendTicketAsync(ticketInfo: PurchasedGroupTicket, receiverEmail: String) {
+        GlobalScope.launch {
+            notificationService.sendNotification(
+                    receiverEmail,
+                    "Ticket for ${ticketInfo.screeningWithMovie.movie.title}",
+                    ticketInfo.getDetailsString()
+            )
+        }
     }
 
 }
