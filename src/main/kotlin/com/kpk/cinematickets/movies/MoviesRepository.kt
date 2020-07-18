@@ -60,7 +60,7 @@ class MoviesRepository(val jdbcTemplate: NamedParameterJdbcTemplate) {
         params.addValue("screeningId", screeningId)
 
         return jdbcTemplate.query(SqlLoader.GET_SCREENING_SEATS, params) { rs, _ ->
-            Seat(rs.getLong("id"), rs.getLong("number"), rs.getBoolean("free"))
+            Seat(rs.getLong("id"), rs.getLong("number"), rs.getBoolean("is_free"))
         }
     }
 
