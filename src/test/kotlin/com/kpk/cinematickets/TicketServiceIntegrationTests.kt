@@ -6,7 +6,6 @@ import com.kpk.cinematickets.tickets.TicketsRepository
 import com.kpk.cinematickets.tickets.TicketsService
 import com.kpk.cinematickets.tickets.models.InvalidScreeningException
 import com.kpk.cinematickets.tickets.models.InvalidSeatsException
-import com.kpk.cinematickets.users.UsersRepository
 import com.kpk.cinematickets.wallet.InsufficientClientMoney
 import com.kpk.cinematickets.wallet.WalletRepository
 import com.kpk.cinematickets.wallet.WalletService

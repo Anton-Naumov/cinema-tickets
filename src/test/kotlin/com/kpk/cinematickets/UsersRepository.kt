@@ -1,4 +1,4 @@
-package com.kpk.cinematickets.users
+package com.kpk.cinematickets
 
 import com.kpk.cinematickets.commons.SqlLoader
 import org.slf4j.LoggerFactory
